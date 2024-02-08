@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Models\User;
+use App\Mail\PostMail;
+use App\Http\Resources\PostResource;
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Requests\DestroyPostRequest;
+use App\Mail\GenericEmail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * @group Posts
@@ -31,6 +36,18 @@ class PostController extends Controller
             'body' => $request->input('body'),
             'user_id' => $user->id,
         ]);
+
+        $favorites = $request->user()->favorites;
+
+        foreach($favorites as $favorite) {
+            $toUser = User::where('id', $favorite->user_id)->get()[0];
+
+            Mail::to(
+                $toUser['email']
+            )->send(new PostMail(
+                name: $user->name,
+            ));
+        }
 
         return new PostResource($post);
     }
