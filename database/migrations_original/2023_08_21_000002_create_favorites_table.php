@@ -12,8 +12,7 @@ return new class () extends Migration {
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // $table->unsignedBigInteger('post_id');
-            $table->morphs('favoriteable');
+            $table->unsignedBigInteger('post_id');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });

@@ -10,10 +10,10 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('favorites', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // $table->unsignedBigInteger('post_id');
-            $table->morphs('favoriteable');
+            $table->string('title');
+            $table->text('body');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
@@ -24,6 +24,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('favorites');
+        Schema::dropIfExists('posts');
     }
 };
